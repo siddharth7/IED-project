@@ -9,11 +9,8 @@ GPIO.setmode(GPIO.BOARD)
 GPIO_TRIGGER1 = 29
 GPIO_ECHO1 = 31
 
-GPIO_TRIGGER2 = 36	
+GPIO_TRIGGER2 = 36
 GPIO_ECHO2 = 37
-
-GPIO_TRIGGER3=11
-GPIO_ECHO3=13
 
 MOTOR1B=18
 MOTOR1E=22
@@ -33,7 +30,7 @@ GPIO.setup(GPIO_TRIGGER2,GPIO.OUT)
 # Allow module to settle
 time.sleep(1)
 
-def sonar(GPIO_TRIGGER):
+def sonar(GPIO_TRIGGER,GPIO_ECHO):
 		# Send 10us pulse to trigger
 		GPIO.output(GPIO_TRIGGER, True)
 		time.sleep(0.00001)
@@ -63,7 +60,7 @@ GPIO.setup(MOTOR1E, GPIO.OUT)
 GPIO.setup(MOTOR2B, GPIO.OUT)
 GPIO.setup(MOTOR2E, GPIO.OUT)
 
-sleep (1)
+time.sleep (1)
 def forward():
 	GPIO.output(MOTOR1B, GPIO.HIGH)
 	GPIO.output(MOTOR1E, GPIO.LOW)
@@ -90,8 +87,9 @@ def leftturn():
 	GPIO.output(MOTOR2B,GPIO.LOW)
 
 while True:
-	time.sleep(0.3)
-	distance1= sonar(GPIO_TRIGGER1)
+	#time.sleep(0.3)
+	forward()
+	distance1= sonar(GPIO_TRIGGER2,GPIO_ECHO2)
 	if (distance1<10):
 		reverse()
 		time.sleep(1)
