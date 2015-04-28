@@ -25,7 +25,7 @@ GPIO.setup(GPIO_TRIGGER2,GPIO.OUT)  # Trigger
 GPIO.setup(GPIO_ECHO2,GPIO.IN)
 
 # Set trigger to False (Low)
-GPIO.output(GPIO_TRIGGER1, False)
+GPIO.output(GPIO_TRIGGE2, False)
 GPIO.setup(GPIO_TRIGGER2,GPIO.OUT)
 # Allow module to settle
 time.sleep(1)
