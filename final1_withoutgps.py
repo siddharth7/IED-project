@@ -24,7 +24,7 @@ MOTOR1E=22
 MOTOR2B=40
 MOTOR2E=32
 
-
+time.sleep(100)
  
 # Set pins as output and input
 GPIO.setup(GPIO_TRIGGER1,GPIO.OUT)  # Trigger
@@ -116,13 +116,11 @@ for line in f1:
                     l4=float(l4)/60
                     s1+=float(l1)+l2
                     s2+=float(l3)+l4
-                    print float(l1)+l2,float(l3)+l4
+                    #print float(l1)+l2,float(l3)+l4
                     n+=1
             var1=s1/n
             var2=s2/n
-	    print s1,s2
 	    print var1,var2
-	    print line
 	    finalline=line.split() 
             lat1=finalline[0]
             long1=finalline[1]
@@ -134,44 +132,52 @@ for line in f1:
             distance3= sonar(GPIO_TRIGGER3,GPIO_ECHO3)
             print "lets go"
 	    if(lat1>var1 and lat2>var1 and long1>var2 and long2>var2):
-		print "dfsdfsdfsdfs"
+		print "if condition 1 "
                 if(distance3<20 and distance2>20 and distance1>20):
+			print "if condition 1 part 1"
 			rightturn()
 			time.sleep(0.3)
 			forward()
 			time.sleep(0.3)
 	    	elif(distance1<20 and distance2>20 and distance3>20):
+			print "if condition 1 part 2"
 			leftturn()
 			time.sleep(0.3)
 			forward()
 			time.sleep(0.3)
 		elif(distance2>20 and distance3>20 and distance1>20):
+			print "if condition 1 part 3"
 			forward()
 			time.sleep(0.3)
 		elif(distance2<20 and distance3>20 and distance1<20):
+			print "if condition 1 part 4"
 			reverse()
 			time.sleep(0.3)
 			leftturn()
 			time.sleep(0.3)
 		elif(distance2<20 and distance1>20 and distance3<20):
+			print "if condition 1 part 5"
 			reverse()
 			time.sleep(0.3)
 			rightturn()
 			time.sleep(0.3)
 		elif(distance2<20 and distance1>20 and distance3>20):
+			print "if condition 1 part 6"
 			reverse()
 			time.sleep(0.3)
 			leftturn()
 			time.sleep(0.3)
 		elif(distance2>20 and distance1<20 and distance3<20):
+			print "if condition 1 part 7"
 			forward()
 			time.sleep(0.5)
         	else:
-                	forward()
+                	print "if condition 1 part 8"
+			forward()
             elif(lat1<var1 and var1<lat2 and long1<var2 and var2<long2):
-                print "in elif last"
+                print "print "elif condition 1"
             else:
-                print "in esle last"
+                print "in else condition at last"
         except KeyboardInterrupt:
             GPIO.output(MOTOR1E,GPIO.LOW)
             GPIO.output(MOTOR1B,GPIO.LOW)
