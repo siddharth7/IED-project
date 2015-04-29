@@ -86,70 +86,54 @@ def leftturn():
         GPIO.output(MOTOR1B,GPIO.LOW)
         GPIO.output(MOTOR2E,GPIO.HIGH)
         GPIO.output(MOTOR2B,GPIO.LOW)
-f1=open("finalwaypoints.txt","r")
-list1=[]
-x=0
-y=1
-z=2
-q=3
-t=0 
+f1=open("finalwaypoints.txt","r") 
 for line in f1:
-    list1.append(line.split(","))
-while True:
-    try:
-        list1[x]=lat1
-        list1[y]=long1  
-        list1[z]=lat2
-        list1[q]=long2
-        distance1= sonar(GPIO_TRIGGER2,GPIO_ECHO2)
-        distance2= sonar(GPIO_TRIGGER1,GPIO_ECHO1)
-        distance3= sonar(GPIO_TRIGGER3,GPIO_ECHO3)
-        if(lat1<var1 and lat2>var1 and long1<var2 and long2>var2 ):
-            forward()
-        elif(lat1>var1<lat2 and long1<var2<long2):
-            if(t<len(list1)):
-                t=t+4
-                x=x+4
-                z=z+4
-                y=y+4
-                q=q+4
-            else:
-                GPIO.output(MOTOR1E,GPIO.LOW)
-                GPIO.output(MOTOR1B,GPIO.LOW)
-                GPIO.output(MOTOR2E,GPIO.LOW)
-                GPIO.output(MOTOR2B,GPIO.LOW)
-
-        elif(distance1<15 and distance2>15 and distance3>15):
-                reverse()
-                time.sleep(1)
-                rightturn()
-                time.sleep(1)
-        elif (distance2<15 and distance1>15 and distance3>15):
-                #reverse()
-                #time.sleep(0.1)
-                leftturn()
-                time.sleep(0.1)
-        elif(distance3<15 and distance2>15 and distance1>15):
-                #reverse()
-                #time.sleep(0.1)
-                rightturn()
-                time.sleep(0.1)
-        elif(distance3<15 and distance1<15):
-                reverse()
-                time.sleep(0.5)
-                rightturn()
-                time.sleep(0.5)
-        elif(distance2<15 and distance1<15):
-                reverse()
-                time.sleep(0.5)
-                leftturn()
-                time.sleep(0.5)
-
-        else:
+    while True:
+        try:
+            lat1=line[0]
+            long1=line[1]
+            lat2=line[2]
+            long2=line[3]
+            distance1= sonar(GPIO_TRIGGER2,GPIO_ECHO2)
+            distance2= sonar(GPIO_TRIGGER1,GPIO_ECHO1)
+            distance3= sonar(GPIO_TRIGGER3,GPIO_ECHO3)
+            if(lat1>var1 and lat2>var1 and long1>var2 and long2>var2):
                 forward()
-    except KeyboardInterrupt:
-        GPIO.output(MOTOR1E,GPIO.LOW)
-        GPIO.output(MOTOR1B,GPIO.LOW)
-        GPIO.output(MOTOR2E,GPIO.LOW)
-        GPIO.output(MOTOR2B,GPIO.LOW)
-        GPIO.cleanup()
+            elif(lat1<var1 and var1<lat2 and long1<var2<long2):
+                break;
+            else:
+                break;
+            elif(distance1<15 and distance2>15 and distance3>15):
+                    reverse()
+                    time.sleep(1)
+                    rightturn()
+                    time.sleep(1)
+            elif (distance2<15 and distance1>15 and distance3>15):
+                    #reverse()
+                    #time.sleep(0.1)
+                    leftturn()
+                    time.sleep(0.1)
+            elif(distance3<15 and distance2>15 and distance1>15):
+                    #reverse()
+                    #time.sleep(0.1)
+                    rightturn()
+                    time.sleep(0.1)
+            elif(distance3<15 and distance1<15):
+                    reverse()
+                    time.sleep(0.5)
+                    rightturn()
+                    time.sleep(0.5)
+            elif(distance2<15 and distance1<15):
+                    reverse()
+                    time.sleep(0.5)
+                    leftturn()
+                    time.sleep(0.5)
+
+            else:
+                    forward()
+        except KeyboardInterrupt:
+            GPIO.output(MOTOR1E,GPIO.LOW)
+            GPIO.output(MOTOR1B,GPIO.LOW)
+            GPIO.output(MOTOR2E,GPIO.LOW)
+            GPIO.output(MOTOR2B,GPIO.LOW)
+            GPIO.cleanup()
