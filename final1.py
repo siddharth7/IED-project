@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 from pynmea import nmea
 import subprocess
 import os
-
+ 
 GPIO.setmode(GPIO.BOARD)
  
 GPIO_TRIGGER1 = 29
@@ -28,7 +28,7 @@ MOTOR2E=32
 GPIO.setup(GPIO_TRIGGER1,GPIO.OUT)  # Trigger
 GPIO.setup(GPIO_ECHO1,GPIO.IN)      # Echo
 GPIO.setup(GPIO_TRIGGER2,GPIO.OUT)  # Trigger
-GPIO.setup(GPIO_ECHO2,GPIO.IN)
+GPIO.setup(GPIO_ECHO2,GPIO.IN)	
 GPIO.setup(GPIO_TRIGGER3,GPIO.OUT)  # Trigger
 GPIO.setup(GPIO_ECHO3,GPIO.IN)
  
@@ -38,9 +38,10 @@ GPIO.output(GPIO_TRIGGER1, False)
 GPIO.output(GPIO_TRIGGER3, False)
  
 def sonar(GPIO_TRIGGER,GPIO_ECHO):
+		print "wewewewewe"
                 # Send 10us pulse to trigger
                 GPIO.output(GPIO_TRIGGER, False)
-                time.sleep(0.1)
+                time.sleep(0.01)
                 GPIO.output(GPIO_TRIGGER, True)
                 time.sleep(0.00001)
                 GPIO.output(GPIO_TRIGGER, False)
@@ -59,7 +60,9 @@ def sonar(GPIO_TRIGGER,GPIO_ECHO):
                 distance = elapsed * 34000
                 # That was the distance there and back so halve the value
                 distance = distance / 2
+		print distance
                 return distance
+
  
 GPIO.setup(MOTOR1B, GPIO.OUT)
 GPIO.setup(MOTOR1E, GPIO.OUT)
@@ -71,25 +74,25 @@ def forward():
     GPIO.output(MOTOR1E, GPIO.LOW)
     GPIO.output(MOTOR2B, GPIO.LOW)
     GPIO.output(MOTOR2E, GPIO.HIGH)
-
+ 
 def reverse():
     GPIO.output(MOTOR1B, GPIO.LOW)
     GPIO.output(MOTOR1E, GPIO.HIGH)
     GPIO.output(MOTOR2B, GPIO.HIGH)
     GPIO.output(MOTOR2E, GPIO.LOW)
-
+ 
 def rightturn():
     GPIO.output(MOTOR1B,GPIO.LOW)
     GPIO.output(MOTOR1E,GPIO.HIGH)
     GPIO.output(MOTOR2B,GPIO.LOW)
     GPIO.output(MOTOR2E,GPIO.HIGH)
-
+ 
 def leftturn():
-    GPIO.output(MOTOR1E,GPIO.HIGH)
-    GPIO.output(MOTOR1B,GPIO.LOW)
-    GPIO.output(MOTOR2E,GPIO.HIGH)
-    GPIO.output(MOTOR2B,GPIO.LOW)
-f1=open("finalwaypoints.txt","r") 
+    GPIO.output(MOTOR1B,GPIO.HIGH)
+    GPIO.output(MOTOR1E,GPIO.LOW)
+    GPIO.output(MOTOR2B,GPIO.HIGH)
+    GPIO.output(MOTOR2E,GPIO.LOW)
+f1=open("finalwaypoints.txt","r")
 for line in f1:
     while True:
         try:
@@ -104,55 +107,75 @@ for line in f1:
                     gpgga=nmea.GPGGA()
                     gpgga=nmea.GPGGA()
                     gpgga.parse(line1)
-		    #print gpgga.longitude,gpgga.latitude
                     l1=str(gpgga.latitude)[0:2]
                     l2=str(gpgga.latitude)[2:]
-                    l2=float(l2)/float(60)
+                    l2=float(l2)/60
                     l3=str(gpgga.longitude)[1:3]
                     l4=str(gpgga.longitude)[3:]
-                    l4=float(l4)/float(60)
+                    l4=float(l4)/60
                     s1+=float(l1)+l2
                     s2+=float(l3)+l4
-                    #print float(l1)+l2,float(l3)+l4 
+                    print float(l1)+l2,float(l3)+l4
                     n+=1
             var1=s1/n
             var2=s2/n
-	    #print var1, var2
-            lat1=line[0]
-            long1=line[1]
-            lat2=line[2]
-            long2=line[3]
+	    print s1,s2
+	    print var1,var2
+	    print line
+	    finalline=line.split() 
+            lat1=finalline[0]
+            long1=finalline[1]
+            lat2=finalline[2]
+            long2=finalline[3]
+	    print lat1,long1,lat2,long2
             distance2= sonar(GPIO_TRIGGER2,GPIO_ECHO2)
             distance1= sonar(GPIO_TRIGGER1,GPIO_ECHO1)
             distance3= sonar(GPIO_TRIGGER3,GPIO_ECHO3)
-            if(lat1>var1 and lat2>var1 and long1>var2 and long2>var2):
-                forward()
-		time.sleep(0.1)
-		if(distance1<30 and distance3>30):
-			leftturn()
-			time.sleep(0.3)
-			forward()
-			time.sleep(0.5)
-		elif(distance1>30 and distance3<30):
-			rightturn()
-			time.sleep(0.3)
-			forward()
-			time.sleep(0.5)
-		elif(distance2<40 and distance3>30):
-			reverse()
-			time.sleep(2)
-			leftturn()
-			time.sleep(0.3)
-            elif(lat1<var1 and var1<lat2 and long1<var2<long2):
-                break
-	    elif(distance3<10)
-		rightturn()
-		time.sleep(0.1)
+            print "lets go"
+	    if(lat1>var1 and lat2>var1 and long1>var2 and long2>var2):
+		print "dfsdfsdfsdfs"
+                if(distance1>30 and distance2>30 and distance3<30):
+                    rightturn()
+                    time.sleep(0.5)
+                    forward()
+                    time.sleep(0.5)
+                elif(distance1<30 and distance2>30 and distance3>30):
+                    leftturn()
+                    time.sleep(0.5)
+                    forward()
+                    time.sleep(0.5)
+                elif(distance1<30 and distance2<30 and distance3<30):
+                    reverse()
+                    time.sleep(1)
+                    rightturn()
+                    time.sleep(0.5)
+                elif(distance1<30 and distance2>30 and distance3<30):
+                    forward()
+                    time.sleep(0.5)
+                elif(distance1<30 and distance2<30 and distance3>30):
+                    reverse()
+                    time.sleep(0.5)
+                    leftturn()
+                    time.sleep(0.5)
+                elif(distance1>30 and distance2<30 and distance3<30):
+                    reverse()
+                    time.sleep(0.5)
+                    rightturn()
+                    time.sleep(0.5)
+                elif(distance1>30 and distance2<30 and distance3<30):
+                    reverse()
+                    time.sleep(1)
+                    rightturn()
+                    time.sleep(0.5)
+                else:
+                    forward()
+            elif(lat1<var1 and var1<lat2 and long1<var2 and var2<long2):
+                print "in elif last"
             else:
-                break
+                print "in esle last"
         except KeyboardInterrupt:
             GPIO.output(MOTOR1E,GPIO.LOW)
             GPIO.output(MOTOR1B,GPIO.LOW)
             GPIO.output(MOTOR2E,GPIO.LOW)
             GPIO.output(MOTOR2B,GPIO.LOW)
-            GPIO.cleanup()
+            GPIO.cleanup() 

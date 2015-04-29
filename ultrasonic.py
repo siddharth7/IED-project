@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
-TRIG = 36
-ECHO = 37
+TRIG = 33
+ECHO = 35
 i=0
 while(1):
    
